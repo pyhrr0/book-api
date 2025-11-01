@@ -1,9 +1,9 @@
-mod config;
+pub mod config;
 mod handlers;
-mod layers;
-mod models;
-mod repositories;
-mod routes;
+pub mod layers;
+pub mod models;
+pub mod repositories;
+pub mod routes;
 mod server;
 mod types;
 mod utils;
