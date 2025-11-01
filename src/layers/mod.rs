@@ -52,7 +52,11 @@ pub async fn override_http_errors(req: Request<Body>, next: Next) -> impl IntoRe
                     app_error!(AppErrorCode::MethodNotAllowed).into_response()
                 }
                 StatusCode::UNPROCESSABLE_ENTITY => {
-                    app_error!(AppErrorCode::UnprocessableEntity, body).into_response()
+                    if body.contains("Failed to deserialize the JSON body") {
+                        app_error!(AppErrorCode::UnprocessableEntity, body).into_response()
+                    } else {
+                        Response::from_parts(parts, Body::from(body))
+                    }
                 }
                 _ => Response::from_parts(parts, Body::from(body)),
             },
