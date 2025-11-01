@@ -1,0 +1,249 @@
+openapi: '3.0.2'
+info:
+  title: Book API
+  version: '0.1.0'
+paths:
+  /api/v1/book:
+    get:
+      summary: ""
+      description: Retrieve books
+      tags:
+        - "Books"
+      parameters:
+        - in: query
+          name: p
+          schema:
+            type: integer
+            default: 0
+          required: false
+          description: Page number
+          example: 1
+        - in: query
+          name: l
+          schema:
+            type: integer
+            maximum: 500
+          required: false
+          description: Limit of links per page
+          example: 10
+        - in: query
+          name: s
+          schema:
+            type: string
+          required: false
+          description: "Sort with available fields: id | title | author | created_at | updated_at."
+          example: -title,+author
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/bookResponse"
+        '400':
+            $ref: "#/components/responses/BadRequest"
+        '422':
+            $ref: "#/components/responses/UnprocessableEntity"
+        '500':
+            $ref: "#/components/responses/InternalServerError"
+    post:
+      summary: ""
+      description: Create a new book
+      tags:
+        - "Books"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bookCreation'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/book'
+        '400':
+            $ref: "#/components/responses/BadRequest"
+        '500':
+            $ref: "#/components/responses/InternalServerError"
+  /api/v1/book/{id}:
+    get:
+      summary: ""
+      description: Retrieve a book
+      tags:
+        - "Books"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: book ID
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/book'
+        '400':
+            $ref: "#/components/responses/BadRequest"
+        '404':
+            $ref: "#/components/responses/NotFound"
+        '500':
+            $ref: "#/components/responses/InternalServerError"
+    put:
+      summary: ""
+      description: Update a book
+      tags:
+        - "Books"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: book ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bookCreation'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/book'
+        '400':
+            $ref: "#/components/responses/BadRequest"
+        '404':
+            $ref: "#/components/responses/NotFound"
+        '500':
+            $ref: "#/components/responses/InternalServerError"
+    delete:
+      summary: ""
+      description: Delete a book
+      tags:
+        - "Books"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: book ID
+      responses:
+        '204':
+          description: No Content
+        '400':
+            $ref: "#/components/responses/BadRequest"
+        '404':
+            $ref: "#/components/responses/NotFound"
+        '500':
+            $ref: "#/components/responses/InternalServerError"
+components:
+  responses:
+    BadRequest:
+      description: Invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+        text/plain:
+          schema:
+            type: string
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+    MethodNotAllowed:
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+  schemas:
+    PaginateTotal:
+      type: object
+      properties:
+        total:
+          type: integer
+      required:
+        - total
+    ResponseError:
+      type: object
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 527
+        message:
+          type: string
+      required:
+        - code
+        - message
+    book:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        author:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - author
+        - created_at
+        - updated_at
+    bookResponse:
+      allOf:
+        - $ref: "#/components/schemas/PaginateTotal"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/book"
+          required:
+            - data
+    bookCreation:
+      type: object
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+      required:
+        - title
+        - author

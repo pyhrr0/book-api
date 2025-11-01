@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                UPDATE book\n                SET title = $1, author = $2, updated_at = $3\n                WHERE id = $4\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Timestamptz",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "c8c48443d1c6d3964efeb5152b3198565a3890135c07463ebad67b0d9372c0aa"
+}

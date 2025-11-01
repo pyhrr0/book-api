@@ -1,0 +1,39 @@
+[package]
+name = "book_api"
+version = "0.1.0"
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "book_api"
+path = "src/main.rs"
+
+[dependencies]
+axum = "0.8.6"
+chrono = { version = "0.4.42", features = ["clock", "std", "serde"], default-features = false }
+clap = { version = "4.5.51", features = ["derive", "cargo"] }
+color-eyre = "0.6.5"
+config = "0.15.18"
+derive_more = { version = "2.0.1", features = ["display", "error"] }
+dotenvy = "0.15.7"
+eyre = "0.6.12"
+futures = "0.3.31"
+metrics = "0.24.2"
+metrics-exporter-prometheus = "0.17.2"
+mime = "0.3.17"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
+serde_urlencoded = "0.7.1"
+sqlx = { version = "0.8.6", features = ["runtime-tokio", "tls-native-tls", "chrono", "postgres", "macros", "migrate"] }
+thiserror = "2.0.17"
+tokio = { version = "1.48.0", features = ["full"] }
+tower = { version = "0.5.2" }
+tower-http = { version = "0.6.6", features = ["fs", "request-id", "util"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.20", features = ["registry", "env-filter", "fmt", "json"] }
+uuid = { version = "1.18.1", features = ["serde", "v4"] }
+validator = { version = "0.20.0", features = ["derive"] }
